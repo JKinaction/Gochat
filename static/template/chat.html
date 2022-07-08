@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="css/chat.css">
+    <title>Chat</title>
+</head>
+
+<body>
+    <div id="banner">
+        <center>
+            <h1>Global Chat</h1>
+        </center>
+    </div>
+
+    <div id="globalmsgs">
+        {{range .msgList}}
+        <div class="msg">
+            <font color=white><b>{{.Time}}{{.User}}:</b></font> {{.Msg}}
+        </div>
+        {{end}}
+    </div>
+    <div id="log"></div>
+    <div id="chatbox" style="font-size: medium;">
+        <form onsubmit="send()">
+                <font color=white><b>{{.user}}:</b></font>
+                <input id="userbox" type="text" name="usermessage" placeholder="Type Here..." autofocus>
+                <input id="submit" type="submit" value="Go">
+        </form>
+    </div>
+    <div id="logout">退出登录</div>
+    <div>用户列表</div>
+    <div id="userlist">
+        {{range .userlist}}
+            <div class="user" id="{{.Username}}">
+                <b>{{.Username}}</b>
+            </div>
+        {{end}}
+    </div>
+<div id="usersCount">{{.usersCount}}</div>
+</body>
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/websocket.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#logout").click(function (){
+            window.location.assign("/u/logout")
+        })
+    })
+    var msg=document.getElementById("userbox")//byname获得不到
+    conn.send(send_data);
+    function send(){
+        if (!conn) {
+            return false;
+        }
+        if (!msg.value) {
+            return false;
+        }
+        console.log(msg.value)
+        let send_data = JSON.stringify({
+            "status": 1,
+            "data": {
+                "content":msg.value
+            }
+        })
+        conn.send(send_data);
+        msg.value = "";
+        return false;
+    }
+</script>
+</html>

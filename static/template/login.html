@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/login.css">
+    <title>Login</title>
+</head>
+
+<body>
+    <div id="loginbox">
+        <div id="banner">
+            <h1>Chat Room</h1>
+        </div>
+        <form action="/auth" method="post">
+            <div id="username">Username:</div>
+            <div><input id="userbox" type="text" name="user"></div>
+            <div id="password">Password:</div>
+            <div><input id="pwdbox" type="password" name="pwd"></div>
+            <div style="margin-top: 3px;">
+                <input id="submit" type="submit" value="Enter">
+            </div>
+        </form>
+        <font color="red"><b>{{.error}}</b></font>
+    </div>
+
+</body>
+
+</html>

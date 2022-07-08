@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="css/chat.css">
+    <title>Chat</title>
+</head>
+
+<body>
+<div id="banner">
+    <center>
+        <h1>{{.touser}}</h1>
+    </center>
+</div>
+
+<div id="globalmsgs">
+    {{range .msgList}}
+        <div class="msg">
+            <font color=white><b>{{.Time}}{{.User}}:</b></font> {{.Msg}}
+        </div>
+    {{end}}
+    <b id="log"></b>
+</div>
+
+<div id="chatbox" style="font-size: medium;">
+        <font color=white><b>{{.user}}:</b></font>
+        <input id="msg" type="text" name="usermessage" placeholder="Type Here..." autofocus>
+        <button id="submit">Go</button>
+</div>
+</body>
+<script type="text/javascript" src="js/websocket.js"></script>
+<script>
+    var tmp = 0;
+    var lt = /</g,
+        gt = />/g,
+        ap = /'/g,
+        ic = /"/g;
+
+    function repeat() {
+        fetch("https://go-chatters.herokuapp.com/u/msglist").then(res => res.json()).then(d => {
+            if (d.length > tmp) {
+                tmp = d.length;
+                document.getElementById("globalmsgs").innerText = "";
+                for (let i = 0; i < d.length; i++) {
+                    d[i].msg = d[i].msg.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
+                    d[i].user = d[i].user.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
+                    d[i].time = d[i].time.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
+
+                    document.getElementById("globalmsgs").innerHTML += "<div class='msg'><b>" + d[i].time + d[i].user + "</b>" + d[i].msg + "</div>";
+                }
+            }
+        });
+    }
+    repeat()
+</script>
+<script>
+    var msg=document.getElementById("msg")//byname获得不到
+    $(document).ready(function (){
+        $("button").click(function (){
+            if (!conn) {
+                return false;
+            }
+            if (!msg.value) {
+                return false;
+            }
+            console.log(msg.value)
+            let send_data = JSON.stringify({
+                "status": 2,
+                "data": {
+                    "toUser": {{.touser}},
+                    "content":msg.value
+                }
+            })
+            conn.send(send_data);
+            msg.value = "";
+            return false;
+        })
+    })
+</script>
+</html>
